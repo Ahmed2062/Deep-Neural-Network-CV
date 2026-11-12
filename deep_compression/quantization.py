@@ -19,7 +19,7 @@ MaskedLinear), which recovers most of the accuracy lost to clustering.
 
 import torch
 
-from compression.pruning import masked_layers
+from deep_compression.pruning import masked_layers
 
 
 @torch.no_grad()

@@ -13,7 +13,7 @@ weights share the same value (e.g. after quantization).
 
 import torch
 
-from compression.linear import MaskedLinear
+from deep_compression.linear import MaskedLinear
 
 
 def masked_layers(model):

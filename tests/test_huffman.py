@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from compression import huffman
+from deep_compression import huffman
 
 
 @pytest.mark.parametrize("data", [

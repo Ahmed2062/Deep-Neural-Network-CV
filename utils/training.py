@@ -5,7 +5,7 @@ import random
 import numpy as np
 import torch
 
-from compression.pruning import masked_layers
+from deep_compression.pruning import masked_layers
 
 
 def set_seed(seed):

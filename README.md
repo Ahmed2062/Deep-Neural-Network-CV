@@ -32,7 +32,7 @@ result of extra training. Pruning appears to act as a regulariser here: the
 dense model's training loss approaches zero and its test accuracy plateaus.
 This is one seed, and differences of ~0.1–0.2% are within run-to-run noise.
 
-**How each size is counted** (`compression/serialization.py → storage_report`):
+**How each size is counted** (`deep_compression/serialization.py → storage_report`):
 
 * **Baseline:** all 465,408 weights + 1,034 biases as float32.
 * **Pruned:** a sparse matrix is not free. Each surviving weight is stored
@@ -91,7 +91,7 @@ MLP `784 → 256 → 512 → 256 → 10` with ReLU (466,442 parameters), Adam
 
 ### 2. Iterative magnitude pruning
 Weights with the smallest magnitude are removed through a binary mask that is
-multiplied into the weight on every forward pass (`compression/linear.py`).
+multiplied into the weight on every forward pass (`deep_compression/linear.py`).
 Masked weights receive zero gradient, so they stay pruned during fine-tuning.
 
 * **Global threshold** across all layers, so each layer's sparsity is decided
@@ -117,7 +117,7 @@ the paper's centroid update, without any custom gradient code.
 
 ### 4. Huffman coding and serialization
 Two integer streams per layer are entropy-coded with a canonical Huffman code
-(`compression/huffman.py`): the cluster index of each surviving weight, and
+(`deep_compression/huffman.py`): the cluster index of each surviving weight, and
 the gap between consecutive surviving weights. Canonical codes mean only each
 symbol's code *length* has to be stored.
 
@@ -136,7 +136,7 @@ this step.
 ├── main.py                    # runs the full pipeline, CLI options
 ├── config.py                  # default hyper-parameters
 ├── requirements.txt
-├── compression/
+├── deep_compression/
 │   ├── linear.py              # MaskedLinear: mask + codebook/indices
 │   ├── pruning.py             # global / per-layer magnitude pruning, schedule
 │   ├── quantization.py        # 1-D K-means weight sharing

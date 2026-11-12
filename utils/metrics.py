@@ -1,7 +1,7 @@
 """Model statistics used in the reports."""
 
-from compression.linear import MaskedLinear
-from compression.pruning import masked_layers
+from deep_compression.linear import MaskedLinear
+from deep_compression.pruning import masked_layers
 
 
 def sparsity(model):

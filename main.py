@@ -18,9 +18,9 @@ import time
 import torch
 
 import config
-from compression.pruning import magnitude_prune, sparsity_schedule
-from compression.quantization import quantize_model
-from compression.serialization import load_compressed, save_compressed, storage_report
+from deep_compression.pruning import magnitude_prune, sparsity_schedule
+from deep_compression.quantization import quantize_model
+from deep_compression.serialization import load_compressed, save_compressed, storage_report
 from data.data_loader import get_data_loaders
 from models.mlp import MnistMLP
 from utils.metrics import count_parameters, layer_stats, sparsity, to_mb

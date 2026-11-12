@@ -7,7 +7,7 @@ quantized in place. 465,408 weights + 1,034 biases = 466,442 parameters.
 
 import torch.nn as nn
 
-from compression.linear import MaskedLinear
+from deep_compression.linear import MaskedLinear
 
 
 class MnistMLP(nn.Module):

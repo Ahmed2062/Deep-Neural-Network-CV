@@ -13,53 +13,49 @@
     "bits": 5,
     "quant_finetune_epochs": 3,
     "quant_lr": 0.0001,
-    "dense_control": true
+    "dense_control": false
   },
   "device": "cpu",
-  "dense_control": {
-    "epochs": 22,
-    "accuracy": 97.86
-  },
   "accuracy": {
-    "baseline": 97.93,
-    "pruned": 98.37,
-    "kmeans_before_finetune": 98.34,
-    "quantized": 98.37,
-    "decoded_from_file": 98.37
+    "baseline": 98.11,
+    "pruned": 98.22,
+    "kmeans_before_finetune": 98.31,
+    "quantized": 98.24,
+    "decoded_from_file": 98.24
   },
   "pruning_steps": [
     {
       "sparsity": 0.5358416701045104,
-      "acc_before_finetune": 97.93,
-      "acc_after_finetune": 98.2
+      "acc_before_finetune": 98.12,
+      "acc_after_finetune": 98.38
     },
     {
       "sparsity": 0.784556775990099,
-      "acc_before_finetune": 96.52,
-      "acc_after_finetune": 98.33
+      "acc_before_finetune": 96.56,
+      "acc_after_finetune": 98.24
     },
     {
       "sparsity": 0.8999995702695269,
-      "acc_before_finetune": 90.99,
-      "acc_after_finetune": 98.37
+      "acc_before_finetune": 94.34,
+      "acc_after_finetune": 98.22
     }
   ],
   "kmeans": [
     {
       "clusters": 32,
-      "mse": 3.679299697978422e-05
+      "mse": 3.4307024179724976e-05
     },
     {
       "clusters": 32,
-      "mse": 3.08020826196298e-05
+      "mse": 3.2118412491399795e-05
     },
     {
       "clusters": 32,
-      "mse": 2.7832837076857686e-05
+      "mse": 3.57667995558586e-05
     },
     {
       "clusters": 32,
-      "mse": 6.915519770700485e-05
+      "mse": 3.633166852523573e-05
     }
   ],
   "layers": [
@@ -70,8 +66,8 @@
         784
       ],
       "weights": 200704,
-      "active": 16503,
-      "sparsity": 0.9177744339923469,
+      "active": 16711,
+      "sparsity": 0.9167380819515306,
       "unique_values": 32
     },
     {
@@ -81,8 +77,8 @@
         256
       ],
       "weights": 131072,
-      "active": 18818,
-      "sparsity": 0.8564300537109375,
+      "active": 18431,
+      "sparsity": 0.8593826293945312,
       "unique_values": 32
     },
     {
@@ -92,9 +88,9 @@
         512
       ],
       "weights": 131072,
-      "active": 10640,
-      "sparsity": 0.9188232421875,
-      "unique_values": 32
+      "active": 10828,
+      "sparsity": 0.917388916015625,
+      "unique_values": 30
     },
     {
       "layer": "classifier.6",
@@ -103,30 +99,30 @@
         256
       ],
       "weights": 2560,
-      "active": 580,
-      "sparsity": 0.7734375,
-      "unique_values": 16
+      "active": 571,
+      "sparsity": 0.776953125,
+      "unique_values": 24
     }
   ],
   "storage_bits": {
     "dense_fp32": 14926144,
-    "pruned": 1993815,
-    "quantized": 741304,
-    "huffman": 465361,
-    "file_on_disk": 567328
+    "pruned": 1994634,
+    "quantized": 742123,
+    "huffman": 463959,
+    "file_on_disk": 565912
   },
   "storage_mb": {
     "dense_fp32": 1.7793350219726562,
-    "pruned": 0.23768126964569092,
-    "quantized": 0.08837032318115234,
-    "huffman": 0.05547535419464111,
-    "file_on_disk": 0.06763076782226562
+    "pruned": 0.237778902053833,
+    "quantized": 0.08846795558929443,
+    "huffman": 0.05530822277069092,
+    "file_on_disk": 0.06746196746826172
   },
   "compression_ratio": {
     "dense_fp32": 1.0,
-    "pruned": 7.486223145076148,
-    "quantized": 20.13498375835015,
-    "huffman": 32.07433368932936,
-    "file_on_disk": 26.30954932596311
+    "pruned": 7.483149289543846,
+    "quantized": 20.1127629786437,
+    "huffman": 32.17125651189006,
+    "file_on_disk": 26.375379917725724
   }
 }

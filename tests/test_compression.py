@@ -3,9 +3,9 @@ import os
 import numpy as np
 import torch
 
-from compression.pruning import magnitude_prune, masked_layers, sparsity_schedule
-from compression.quantization import kmeans_1d, quantize_model
-from compression.serialization import load_compressed, save_compressed
+from deep_compression.pruning import magnitude_prune, masked_layers, sparsity_schedule
+from deep_compression.quantization import kmeans_1d, quantize_model
+from deep_compression.serialization import load_compressed, save_compressed
 from models.mlp import MnistMLP
 from utils.metrics import sparsity
 

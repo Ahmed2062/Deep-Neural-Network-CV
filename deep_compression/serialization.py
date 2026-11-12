@@ -25,8 +25,8 @@ import os
 import numpy as np
 import torch
 
-from compression import huffman
-from compression.pruning import masked_layers
+from deep_compression import huffman
+from deep_compression.pruning import masked_layers
 
 FP32 = 32
 
