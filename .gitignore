@@ -9,9 +9,6 @@ venv/
 # Dataset (downloaded automatically by torchvision)
 data/MNIST/
 
-# Generated outputs (re-create with `python main.py`)
-results/*.npz
-
 # OS / editor
 .DS_Store
 .idea/
