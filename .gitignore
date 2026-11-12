@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+_pycache_/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Dataset (downloaded automatically by torchvision)
+data/MNIST/
+
+# Generated outputs (re-create with `python main.py`)
+results/*.npz
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

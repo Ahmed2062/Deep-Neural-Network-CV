@@ -1,71 +1,36 @@
+"""Model statistics used in the reports."""
 
-import torch
-
-def calculate_sparsity(model):
-    total = 0
-    zero = 0
-
-    for module in model.modules():
-        if hasattr(module, 'mask'):
-            total += module.mask.numel()
-            zero += (module.mask == 0).sum().item()
-
-    sparsity = 100 * zero / total
-    return sparsity
+from compression.linear import MaskedLinear
+from compression.pruning import masked_layers
 
 
-def count_unique_weights(model):
-    unique_vals = set()
-
-    for module in model.modules():
-        if hasattr(module, "weight"):
-            unique_vals.update(module.weight.data.cpu().numpy().flatten())
-
-    return len(unique_vals)
+def sparsity(model):
+    """Fraction of prunable weights that are pruned, in [0, 1]."""
+    layers = masked_layers(model)
+    total = sum(l.num_weights() for l in layers)
+    active = sum(l.num_active() for l in layers)
+    return 1.0 - active / total
 
 
-def detailed_sparsity_report(model):
-    total = 0
-    zero = 0
-
-    for module in model.modules():
-        if hasattr(module, "mask"):
-            total += module.mask.numel()
-            zero += (module.mask == 0).sum().item()
-
-    active = total - zero
-
-    print("--- PRUNING REPORT ---")
-    print(f"Total Weights:  {total:,}")
-    print(f"Active Weights: {active:,}")
-    print(f"Zeroed Weights: {zero:,}")
-    print(f"Sparsity:       {100*zero/total:.2f}%")
-
-
-
-def quantization_report(model):
-    print("\n--- QUANTIZATION STATS ---")
-
+def layer_stats(model):
+    rows = []
     for name, module in model.named_modules():
-        if hasattr(module, "weight"):
-            weights = module.weight.data.cpu().numpy().flatten()
-            unique_vals = len(set(weights))
+        if isinstance(module, MaskedLinear):
+            w = module.effective_weight()[module.mask.bool()]
+            rows.append({
+                "layer": name,
+                "shape": tuple(module.weight.shape),
+                "weights": module.num_weights(),
+                "active": module.num_active(),
+                "sparsity": 1 - module.num_active() / module.num_weights(),
+                "unique_values": int(w.unique().numel()),
+            })
+    return rows
 
-            zero_mask = 1 if hasattr(module, "mask") else 0
 
-            print(f"Layer '{name}': {unique_vals} unique active weights + {zero_mask} zero-mask")
-
-    print("--------------------------\n")
+def count_parameters(model):
+    return sum(p.numel() for n, p in model.named_parameters() if n.endswith(("weight", "bias")))
 
 
-def calculate_storage(model, bits=32):
-    total_params = 0
-
-    for module in model.modules():
-        if hasattr(module, "weight"):
-            total_params += module.weight.numel()
-
-    total_bits = total_params * bits
-    total_mb = total_bits / (8 * 1024 * 1024)
-
-    return total_mb
+def to_mb(bits):
+    return bits / 8 / 1024 / 1024

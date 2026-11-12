@@ -1,0 +1,114 @@
+
+================================================================
+                   DEEP COMPRESSION PIPELINE                    
+================================================================
+device: cpu   parameters: 466,442
+
+================================================================
+                   PHASE 1: BASELINE TRAINING                   
+================================================================
+  [baseline] epoch  1/10  loss 0.2551  test acc 95.79%
+  [baseline] epoch  2/10  loss 0.0971  test acc 96.71%
+  [baseline] epoch  3/10  loss 0.0699  test acc 97.49%
+  [baseline] epoch  4/10  loss 0.0553  test acc 97.58%
+  [baseline] epoch  5/10  loss 0.0401  test acc 97.49%
+  [baseline] epoch  6/10  loss 0.0386  test acc 96.98%
+  [baseline] epoch  7/10  loss 0.0303  test acc 97.77%
+  [baseline] epoch  8/10  loss 0.0264  test acc 97.92%
+  [baseline] epoch  9/10  loss 0.0236  test acc 97.72%
+  [baseline] epoch 10/10  loss 0.0222  test acc 97.93%
+
+================================================================
+              PHASE 2: ITERATIVE MAGNITUDE PRUNING              
+================================================================
+
+step 1: sparsity 53.58%  accuracy right after pruning 97.93%
+  [prune 1] epoch  1/3  loss 0.0115  test acc 98.38%
+  [prune 1] epoch  2/3  loss 0.0079  test acc 97.97%
+  [prune 1] epoch  3/3  loss 0.0078  test acc 98.20%
+
+step 2: sparsity 78.46%  accuracy right after pruning 96.52%
+  [prune 2] epoch  1/3  loss 0.0115  test acc 98.51%
+  [prune 2] epoch  2/3  loss 0.0025  test acc 98.47%
+  [prune 2] epoch  3/3  loss 0.0008  test acc 98.33%
+
+step 3: sparsity 90.00%  accuracy right after pruning 90.99%
+  [prune 3] epoch  1/3  loss 0.0249  test acc 98.37%
+  [prune 3] epoch  2/3  loss 0.0056  test acc 98.48%
+  [prune 3] epoch  3/3  loss 0.0019  test acc 98.37%
+
+       layer       shape  active  sparsity  unique values
+---------------------------------------------------------
+classifier.0  (256, 784)  16,503     91.8%         16,495
+classifier.2  (512, 256)  18,818     85.6%         18,809
+classifier.4  (256, 512)  10,640     91.9%         10,637
+classifier.6   (10, 256)     580     77.3%            580
+
+================================================================
+      PHASE 3: K-MEANS WEIGHT SHARING (5-bit, 32 clusters)      
+================================================================
+accuracy right after clustering: 98.34%
+fine-tuning shared centroids (dense weights frozen):
+  [centroids] epoch  1/3  loss 0.0008  test acc 98.37%
+  [centroids] epoch  2/3  loss 0.0004  test acc 98.37%
+  [centroids] epoch  3/3  loss 0.0003  test acc 98.37%
+
+       layer       shape  active  sparsity  unique values
+---------------------------------------------------------
+classifier.0  (256, 784)  16,503     91.8%             32
+classifier.2  (512, 256)  18,818     85.6%             32
+classifier.4  (256, 512)  10,640     91.9%             32
+classifier.6   (10, 256)     580     77.3%             16
+
+================================================================
+            PHASE 4: HUFFMAN CODING + SERIALIZATION             
+================================================================
+wrote results/compressed_model.npz (70,916 bytes)
+
+================================================================
+          VERIFICATION: DECODE FILE INTO A FRESH MODEL          
+================================================================
+decoded weights identical to in-memory model: True
+accuracy of decoded model: 98.37%
+
+================================================================
+            CONTROL: DENSE MODEL, SAME TOTAL EPOCHS             
+================================================================
+  [dense control] epoch  1/22  loss 0.2501  test acc 96.03%
+  [dense control] epoch  2/22  loss 0.1018  test acc 96.44%
+  [dense control] epoch  3/22  loss 0.0698  test acc 97.39%
+  [dense control] epoch  4/22  loss 0.0534  test acc 97.06%
+  [dense control] epoch  5/22  loss 0.0418  test acc 97.68%
+  [dense control] epoch  6/22  loss 0.0351  test acc 97.72%
+  [dense control] epoch  7/22  loss 0.0303  test acc 97.72%
+  [dense control] epoch  8/22  loss 0.0291  test acc 97.86%
+  [dense control] epoch  9/22  loss 0.0242  test acc 97.88%
+  [dense control] epoch 10/22  loss 0.0241  test acc 97.96%
+  [dense control] epoch 11/22  loss 0.0218  test acc 97.39%
+  [dense control] epoch 12/22  loss 0.0163  test acc 97.79%
+  [dense control] epoch 13/22  loss 0.0187  test acc 98.16%
+  [dense control] epoch 14/22  loss 0.0181  test acc 98.10%
+  [dense control] epoch 15/22  loss 0.0103  test acc 98.18%
+  [dense control] epoch 16/22  loss 0.0153  test acc 98.25%
+  [dense control] epoch 17/22  loss 0.0157  test acc 98.11%
+  [dense control] epoch 18/22  loss 0.0099  test acc 98.25%
+  [dense control] epoch 19/22  loss 0.0117  test acc 98.09%
+  [dense control] epoch 20/22  loss 0.0146  test acc 97.96%
+  [dense control] epoch 21/22  loss 0.0120  test acc 98.24%
+  [dense control] epoch 22/22  loss 0.0113  test acc 97.86%
+
+================================================================
+                            SUMMARY                             
+================================================================
+                         stage  test acc %  size KB  compression
+----------------------------------------------------------------
+      Baseline (dense float32)       97.93   1822.0         1.0x
+Pruned to 90% (sparse float32)       98.37    243.4         7.5x
+        + 5-bit weight sharing       98.37     90.5        20.1x
+              + Huffman coding       98.37     56.8        32.1x
+    Actual file on disk (.npz)       98.37     69.3        26.3x
+
+dense control trained for 22 epochs: 97.86%
+
+total time: 377s
+EXIT 0

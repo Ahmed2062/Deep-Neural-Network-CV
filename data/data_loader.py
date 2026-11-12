@@ -1,34 +1,24 @@
+"""MNIST data loaders. The dataset is downloaded on first run (not committed)."""
 
 import torch
-from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
 
-class MNISTFeatureDataset(torch.utils.data.Dataset):
-    def __init__(self, train=True):
-        transform = transforms.Compose([transforms.ToTensor(),])
-
-        self.dataset = datasets.MNIST(
-            root="./data/MNIST",
-            train=train,
-            download=True,
-            transform=transform)
-
-    def __len__(self):
-        return len(self.dataset)
-
-    def __getitem__(self, idx):
-        img, label = self.dataset[idx]
-
-        # Feature extraction Step
-        feature = img.view(-1)
-        return feature, label
+# Mean and standard deviation of MNIST training pixels.
+MNIST_MEAN, MNIST_STD = 0.1307, 0.3081
 
 
-def get_data_loaders(batch_size=128):
-    train_dataset = MNISTFeatureDataset(train=True)
-    test_dataset = MNISTFeatureDataset(train=False)
+def get_data_loaders(data_dir="data", batch_size=128, seed=42, num_workers=0):
+    transform = transforms.Compose([
+        transforms.ToTensor(),                       # [0, 255] -> [0, 1]
+        transforms.Normalize((MNIST_MEAN,), (MNIST_STD,)),
+    ])
+    train_set = datasets.MNIST(data_dir, train=True, download=True, transform=transform)
+    test_set = datasets.MNIST(data_dir, train=False, download=True, transform=transform)
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
-
+    generator = torch.Generator().manual_seed(seed)  # reproducible shuffling
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True,
+                              generator=generator, num_workers=num_workers)
+    test_loader = DataLoader(test_set, batch_size=1000, shuffle=False,
+                             num_workers=num_workers)
     return train_loader, test_loader
